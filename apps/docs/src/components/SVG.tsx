@@ -42,9 +42,8 @@ function SVG({ fnId, step = 10 }: SettingsProps) {
     let res = [];
     let i = Math.floor(min - 1);
 
+    const delta = (max - min) / DENSITY_MAP[fnId];
     while (i < Math.ceil(max + 1)) {
-      const delta = (max - min) / DENSITY_MAP[fnId];
-
       res.push(<ContourSinglePath key={i} contour={marchingSquares(grid, step, (i += delta))} />);
     }
 

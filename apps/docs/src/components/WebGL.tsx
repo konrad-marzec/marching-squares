@@ -23,7 +23,7 @@ function WebGL({ fnId, step = 10 }: WebGLProps) {
     }
 
     appRef.current = new PIXI.Application({
-      background: '#1099bb',
+      background: '#FFFFFF',
       view: canvasRef.current,
       resizeTo: window,
     });
@@ -40,17 +40,24 @@ function WebGL({ fnId, step = 10 }: WebGLProps) {
       return;
     }
 
+    appRef.current.stage.removeChildren();
+
     let res = [];
     let i = Math.floor(min - 1);
 
+    const delta = (max - min) / DENSITY_MAP[fnId];
     while (i < Math.ceil(max + 1)) {
-      const delta = (max - min) / DENSITY_MAP[fnId];
-      const contour = marchingSquares(grid, step, (i += delta));
-      res.push(...isoline(contour));
-      // res.push(<ContourSinglePath key={i} contour={marchingSquares(grid, step, (i += delta))} />);
+      res.push(...isoline(marchingSquares(grid, step, (i += delta))));
     }
 
-    console.log(res);
+    res.forEach((path) => {
+      const graphics = new PIXI.Graphics();
+      graphics.lineStyle(1, 0x000000);
+
+      graphics.moveTo(path[0].x, path[0].y);
+      path.forEach((p) => graphics.lineTo(p.x, p.y));
+      appRef.current?.stage.addChild(graphics);
+    });
 
     console.log('useEffect');
   }, [grid, min, max]);
