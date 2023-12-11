@@ -11,8 +11,8 @@ export default function Home() {
   return (
     <>
       <Settings fnId={fnId} onChange={setFnId} />
-      <SVG fnId={fnId} />
-      {/* <WebGL fnId={fnId} /> */}
+      {/* <SVG fnId={fnId} /> */}
+      <WebGL fnId={fnId} />
     </>
   );
 }
