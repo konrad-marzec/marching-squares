@@ -1,3 +1,6 @@
+import { Point } from '../constants/mesh.constants';
+import { parse, stringify } from './point.utils';
+
 function lerp(x0: number, x1: number, t = 0.5) {
   return x0 + (x1 - x0) * t;
 }
@@ -13,7 +16,7 @@ function getFlag(n: number, threshold: number) {
 }
 
 export function marchingSquares(grid: number[][], step: number, threshold: number) {
-  const contours = [];
+  const contours: [Point, Point][] = [];
 
   for (let i = 0; i < grid.length - 1; i++) {
     for (let j = 0; j < grid[i].length - 1; j++) {
@@ -82,4 +85,97 @@ export function marchingSquares(grid: number[][], step: number, threshold: numbe
   }
 
   return contours;
+}
+
+function swap(map: Map<string, any>, left: Point, right: Point) {
+  if (map.has(stringify(right))) {
+    swap(map, right, map.get(stringify(right)));
+  }
+
+  map.set(stringify(right), left);
+}
+
+export function isoline(contours: [Point, Point][]) {
+  if (!contours?.length) {
+    return [];
+  }
+
+  const startToEnd = new Map();
+  contours.forEach((cnt) => {
+    const start = cnt[0];
+    const end = cnt[1];
+
+    if (startToEnd.has(stringify(start))) {
+      swap(startToEnd, start, end);
+    } else {
+      startToEnd.set(stringify(start), end);
+    }
+  });
+
+  const endToStart = new Map();
+  startToEnd.forEach((value, key) => {
+    if (endToStart.has(stringify(value))) {
+      swap(endToStart, value, parse(key));
+    } else {
+      endToStart.set(stringify(value), parse(key));
+    }
+  });
+
+  const values = new Set();
+  endToStart.forEach((value) => {
+    values.add(stringify(value));
+  });
+
+  let startPoints = contours.filter((cnt) => !values.has(stringify(cnt[1])) || !values.has(stringify(cnt[0])));
+  if (startPoints.length === 0) {
+    startPoints = [contours[0]];
+  }
+
+  const lines = [];
+
+  for (let i = 0; i < startPoints.length; i++) {
+    let start = startPoints[i][1];
+    let key = stringify(start);
+
+    const line = [];
+
+    while (endToStart.has(key)) {
+      line.push(start);
+
+      start = endToStart.get(key);
+      endToStart.delete(key);
+
+      key = stringify(start);
+    }
+
+    line.push(start);
+
+    if (line.length) {
+      lines.push(line);
+    }
+  }
+
+  while (endToStart.size) {
+    let key = endToStart.keys().next().value;
+    let start = endToStart.get(key);
+
+    const line = [parse(key)];
+
+    while (endToStart.has(key)) {
+      line.push(start);
+
+      start = endToStart.get(key);
+      endToStart.delete(key);
+
+      key = stringify(start);
+    }
+
+    line.push(start);
+
+    if (line.length > 2) {
+      lines.push(line);
+    }
+  }
+
+  return lines;
 }
