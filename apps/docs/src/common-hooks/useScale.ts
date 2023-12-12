@@ -9,7 +9,11 @@ export function useScale(
 ): [ScaleLinear<number, number>, ScaleLinear<number, number>, number] {
   switch (fnId) {
     case MeshType.ONE:
-      return [scaleLinear().domain([0, width]).range([-1, 1]), scaleLinear().domain([0, height]).range([-1, 1]), 30];
+      return [
+        scaleLinear().domain([0, width]).range([-200, 200]),
+        scaleLinear().domain([0, height]).range([-200, 200]),
+        2,
+      ];
     case MeshType.TWO:
       return [
         scaleLinear().domain([0, width]).range([-100, 100]),
