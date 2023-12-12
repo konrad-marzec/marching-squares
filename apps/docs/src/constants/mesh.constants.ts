@@ -22,8 +22,8 @@ export const FN_MAP: Record<MeshType, (x: number, y: number) => number> = {
 };
 
 export const DENSITY_MAP: Record<MeshType, number> = {
-  [MeshType.ONE]: 22,
+  [MeshType.ONE]: 20,
   [MeshType.TWO]: 16,
-  [MeshType.THREE]: 14,
-  [MeshType.FOUR]: 20,
+  [MeshType.THREE]: 15,
+  [MeshType.FOUR]: 30,
 };
