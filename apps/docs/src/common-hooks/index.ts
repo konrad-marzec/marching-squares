@@ -1,1 +1,2 @@
-export * from './useScreenSize';
+export { useScreenSize } from './useScreenSize';
+export { useScale } from './useScale';

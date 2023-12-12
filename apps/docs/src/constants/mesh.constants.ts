@@ -2,6 +2,11 @@ import { func1, func2, func3, func4 } from '../utils/mesh.utils';
 
 export type Point = { x: number; y: number };
 
+export enum RenderEngine {
+  SVG = 'svg',
+  WEBGL = 'webgl',
+}
+
 export enum MeshType {
   ONE = '1',
   TWO = '2',

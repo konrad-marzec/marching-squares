@@ -2,22 +2,20 @@ import * as PIXI from 'pixi.js';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { DENSITY_MAP, FN_MAP, MeshType } from '../constants/mesh.constants';
 import { mesh } from '../utils/mesh.utils';
-import { useScreenSize } from '../common-hooks';
+import { useScale, useScreenSize } from '../common-hooks';
 import { isoline, marchingSquares } from '../utils/contour.utils';
 
 type WebGLProps = {
   fnId: MeshType;
-  step?: number;
 };
 
-function WebGL({ fnId, step = 10 }: WebGLProps) {
+function WebGL({ fnId }: WebGLProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const appRef = useRef<PIXI.Application>();
   const { width, height } = useScreenSize();
+  const [xScale, yScale, step] = useScale(fnId, width, height);
 
   useLayoutEffect(() => {
-    console.log('useLayoutEffect');
-
     if (!canvasRef.current) {
       return;
     }
@@ -30,9 +28,7 @@ function WebGL({ fnId, step = 10 }: WebGLProps) {
   }, []);
 
   const [grid, min, max] = useMemo(() => {
-    console.log('useMemo');
-
-    return mesh(FN_MAP[fnId], width, height, step);
+    return mesh(FN_MAP[fnId], xScale, yScale, step);
   }, [fnId, width, height]);
 
   useEffect(() => {
@@ -58,8 +54,6 @@ function WebGL({ fnId, step = 10 }: WebGLProps) {
       path.forEach((p) => graphics.lineTo(p.x, p.y));
       appRef.current?.stage.addChild(graphics);
     });
-
-    console.log('useEffect');
   }, [grid, min, max]);
 
   return <canvas ref={canvasRef} />;

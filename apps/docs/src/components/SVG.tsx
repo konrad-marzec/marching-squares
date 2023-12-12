@@ -5,17 +5,17 @@ import { marchingSquares } from '../utils/contour.utils';
 // import Values from './Values';
 import ContourSinglePath from './ContourSinglePath';
 import { DENSITY_MAP, FN_MAP, MeshType } from '../constants/mesh.constants';
-import { useScreenSize } from '../common-hooks';
+import { useScale, useScreenSize } from '../common-hooks';
 
 type SettingsProps = {
   fnId: MeshType;
-  step?: number;
 };
 
-function SVG({ fnId, step = 10 }: SettingsProps) {
+function SVG({ fnId }: SettingsProps) {
   const { width, height } = useScreenSize();
+  const [xScale, yScale, step] = useScale(fnId, width, height);
 
-  const [grid, min, max] = useMemo(() => mesh(FN_MAP[fnId], width, height, step), [fnId, width, height]);
+  const [grid, min, max] = useMemo(() => mesh(FN_MAP[fnId], xScale, yScale, step), [fnId, width, height]);
 
   // const contours = useMemo(() => {
   //   if (!grid?.length) {
@@ -54,7 +54,7 @@ function SVG({ fnId, step = 10 }: SettingsProps) {
     <svg className="w-screen h-screen" viewBox={`0 0 ${width} ${height}`}>
       {/* <Values grid={grid} min={min} max={max} step={step} /> */}
 
-      <defs>
+      {/* <defs>
         <pattern id="grid" width={step} height={step} patternUnits="userSpaceOnUse">
           <path
             fill="none"
@@ -65,7 +65,7 @@ function SVG({ fnId, step = 10 }: SettingsProps) {
           />
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill="url(#grid)" />
+      <rect width="100%" height="100%" fill="url(#grid)" /> */}
 
       {contours}
     </svg>

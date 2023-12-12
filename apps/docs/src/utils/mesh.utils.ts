@@ -1,3 +1,5 @@
+import { ScaleLinear } from 'd3-scale';
+
 export function func1(x0: number, y0: number) {
   const w = 0.06;
 
@@ -41,26 +43,25 @@ export function func4(x0: number, y0: number) {
 
 export function mesh(
   fn: (x0: number, y0: number) => number,
-  width: number,
-  height: number,
+  xScale: ScaleLinear<number, number>,
+  yScale: ScaleLinear<number, number>,
   step: number,
 ): [number[][], number, number] {
-  let y = 0;
-
   let min = Infinity;
   let max = -Infinity;
   const values: number[][] = [];
 
-  const xShift = Math.floor(width / step / 2);
-  const yShift = Math.floor(height / step / 2);
+  const width = xScale.domain()[1];
+  const height = yScale.domain()[1];
 
+  let y = 0;
   while (y * step < height) {
     values[y] ||= [];
     const row = values[y];
 
     let x = 0;
     while (x * step < width) {
-      const val = fn(x - xShift, y - yShift);
+      const val = fn(xScale(x * step), yScale(y * step));
 
       max = Math.max(max, val);
       min = Math.min(min, val);
