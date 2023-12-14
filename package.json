@@ -9,6 +9,16 @@
     "clean": "turbo clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "description": "marching-squares is a JavaScript project designed for testing SVG and WebGL rendering of isolines",
+  "keywords": [
+    "isoline",
+    "react",
+    "marching squares",
+    "react-component",
+    "svg",
+    "webgl",
+    "data visualization"
+  ],
   "devDependencies": {
     "eslint": "^8.45.0",
     "eslint-config-base": "workspace:*",
