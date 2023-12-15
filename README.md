@@ -1,5 +1,9 @@
 # marching squares
 
+![alt text](assets/1.png)
+---
+![alt text](assets/2.png)
+
 ### Apps and Packages
 
 - `docs`: A placeholder documentation site powered by [Next.js](https://nextjs.org/)
